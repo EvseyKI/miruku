@@ -10,7 +10,7 @@ __pycache__/
 .env
 
 # data files
-data/
+data/histories.db
 output/
 
 # qdrant vector index

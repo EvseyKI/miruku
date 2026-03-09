@@ -10,7 +10,7 @@ from model.agent import AgentSystem
 load_dotenv()
 
 st.set_page_config(page_title="Miruku", layout="centered")
-st.title("Miruku — поиск и рекомендации аниме тайтлов")
+st.subheader("Miruku — поиск и рекомендации аниме тайтлов")
 
 
 @st.cache_resource

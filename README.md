@@ -10,7 +10,7 @@
   <a href="https://python-poetry.org"><img src="https://img.shields.io/badge/Poetry-60A5FA?style=for-the-badge&logo=poetry&logoColor=white"/></a>
 </p>
 
-Miruku — это AI-агент для поиска и рекомендации аниме. Он понимает запросы на естественном языке («что-нибудь мрачное про самураев с хорошим рейтингом»), умеет находить похожее по атмосфере и пожеланиям, отслеживать онгоинги в реальном времени и даже находить аниме-аналоги по описанию любого фильма или игры.
+Miruku — это AI-агент для поиска и рекомендации аниме. Понимает запросы на естественном языке, находит похожее по атмосфере и пожеланиям, отслеживает онгоинги в реальном времени и ищет аниме-аналоги по описанию любого фильма или игры.
 
 Доступен в двух интерфейсах: **Streamlit-приложение** и **Telegram-бот**.
 
@@ -114,7 +114,7 @@ python -m parse.cli --max-pages 1
 > - `--checkpoint-every` — сохранять чекпоинт каждые N аниме, по умолчанию `500`
 > - `--output` — путь для сохранения результатов
 
-## 🧹 Очистка данных и векторизация
+## Очистка данных и векторизация
 
 Очищенный датасет уже загружен на HuggingFace:  
 [EvseyKI/shikimori-clean-v1](https://huggingface.co/datasets/EvseyKI/shikimori-clean-v1)
@@ -136,21 +136,19 @@ jupyter notebook notebooks/test_nlp.ipynb
 
 ## Запуск Qdrant
 
-### Локально (для разработки)
+### Локально
 
 ```bash
 docker run -d \
   --name qdrant \
   -p 6333:6333 \
-  -v $(pwd)/qdrant_storage:/qdrant/storage \
+  -v qdrant_storage:/qdrant/storage \
   qdrant/qdrant
 ```
 
 Qdrant будет доступен на `http://localhost:6333` (дашборд: `http://localhost:6333/dashboard`).
 
-> Данные коллекции сохраняются в `qdrant_storage/` — том монтируется при каждом запуске контейнера.
-
-### Qdrant Cloud (для деплоя)
+### Qdrant Cloud
 
 1. Создай бесплатный кластер на [cloud.qdrant.io](https://cloud.qdrant.io)
 2. Сохрани **Cluster Endpoint** и **API Key**
