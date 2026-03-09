@@ -1,0 +1,20 @@
+# cache files
+**.DS_Store
+**/__pycache__/
+__pycache__/
+*.pyc
+**.idea
+.venv
+
+# env files
+.env
+
+# data files
+data/
+output/
+
+# qdrant vector index
+qdrant_storage/
+
+# jupyter checkpoints
+.ipynb_checkpoints/

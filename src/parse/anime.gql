@@ -1,0 +1,79 @@
+query($page: PositiveInt) {
+  animes(page: $page, limit: 50, order: ranked, censored: false) {
+    id
+    malId
+    name
+    russian
+    synonyms
+    kind
+    episodes
+    episodesAired
+    duration
+    status
+    season
+    airedOn {
+      year
+      month
+      day
+      date
+    }
+    releasedOn {
+      year
+      month
+      day
+      date
+    }
+    score
+    rating
+    description
+    url
+    franchise
+    poster {
+      mainUrl
+      originalUrl
+    }
+    genres {
+      id
+      name
+      russian
+      kind
+    }
+    studios {
+      id
+      name
+    }
+    related {
+      anime {
+        id
+        name
+        russian
+      }
+      relationText
+    }
+    characterRoles {
+      rolesEn
+      character {
+        id
+        name
+        russian
+      }
+    }
+    personRoles {
+      rolesEn
+      rolesRu
+      person {
+        id
+        name
+        russian
+      }
+    }
+    videos {
+      id
+      name
+      url
+      playerUrl
+      imageUrl
+      kind
+    }
+  }
+}
