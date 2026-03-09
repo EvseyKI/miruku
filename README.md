@@ -81,9 +81,13 @@ TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
 VSELLM_API_KEY=your_api_key_here
 VSELLM_BASE_URL=https://api.vsellm.ru/v1
 
-# Qdrant
+# Qdrant — локальный (для разработки)
 QDRANT_HOST=localhost
 QDRANT_PORT=6333
+
+# Qdrant Cloud (для деплоя, приоритет над QDRANT_HOST/PORT если задан)
+QDRANT_URL=your_qdrant_cloud_url_here
+QDRANT_API_KEY=your_qdrant_api_key_here
 ```
 
 ## Парсинг данных с Shikimori
@@ -132,7 +136,7 @@ jupyter notebook notebooks/test_nlp.ipynb
 
 ## Запуск Qdrant
 
-Перед запуском проекта необходимо поднять Qdrant:
+### Локально (для разработки)
 
 ```bash
 docker run -d \
@@ -142,9 +146,22 @@ docker run -d \
   qdrant/qdrant
 ```
 
-Qdrant будет доступен на `http://localhost:6333`.  
+Qdrant будет доступен на `http://localhost:6333` (дашборд: `http://localhost:6333/dashboard`).
 
 > Данные коллекции сохраняются в `qdrant_storage/` — том монтируется при каждом запуске контейнера.
+
+### Qdrant Cloud (для деплоя)
+
+1. Создай бесплатный кластер на [cloud.qdrant.io](https://cloud.qdrant.io)
+2. Сохрани **Cluster Endpoint** и **API Key**
+3. Добавь в `.env`: `QDRANT_URL` и `QDRANT_API_KEY`
+4. Перенеси данные из локального Qdrant в облако:
+
+```bash
+python migrate_qdrant.py
+```
+
+Если заданы оба варианта, `QDRANT_URL` имеет приоритет над `QDRANT_HOST/PORT`.
 
 ## Запуск проекта
 

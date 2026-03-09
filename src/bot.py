@@ -63,10 +63,14 @@ embeddings = OpenAIEmbeddings(
     base_url=os.environ["VSELLM_BASE_URL"],
 )
 
-qdrant = QdrantClient(
-    host=os.environ.get("QDRANT_HOST", "localhost"),
-    port=int(os.environ.get("QDRANT_PORT", 6333)),
-)
+qdrant_url = os.environ.get("QDRANT_URL")
+if qdrant_url:
+    qdrant = QdrantClient(url=qdrant_url, api_key=os.environ.get("QDRANT_API_KEY"))
+else:
+    qdrant = QdrantClient(
+        host=os.environ.get("QDRANT_HOST", "localhost"),
+        port=int(os.environ.get("QDRANT_PORT", 6333)),
+    )
 
 agent = AgentSystem(
     llm_fast=llm_fast,

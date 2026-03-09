@@ -30,10 +30,14 @@ def get_agent() -> AgentSystem:
         api_key=os.environ["VSELLM_API_KEY"],
         base_url=os.environ["VSELLM_BASE_URL"],
     )
-    qdrant = QdrantClient(
-        host=os.environ.get("QDRANT_HOST", "localhost"),
-        port=int(os.environ.get("QDRANT_PORT", 6333)),
-    )
+    qdrant_url = os.environ.get("QDRANT_URL")
+    if qdrant_url:
+        qdrant = QdrantClient(url=qdrant_url, api_key=os.environ.get("QDRANT_API_KEY"))
+    else:
+        qdrant = QdrantClient(
+            host=os.environ.get("QDRANT_HOST", "localhost"),
+            port=int(os.environ.get("QDRANT_PORT", 6333)),
+        )
     return AgentSystem(
         llm_fast=llm_fast,
         llm_quality=llm_quality,
