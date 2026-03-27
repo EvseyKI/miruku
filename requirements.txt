@@ -10,3 +10,4 @@ langchain>=1.2.10
 duckduckgo-search>=8.1.1
 streamlit>=1.55.0
 ddgs>=9.11.2
+langfuse>=3.0.0

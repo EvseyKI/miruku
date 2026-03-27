@@ -3,6 +3,7 @@
 <p align="left">
   <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"/></a>
   <a href="https://python.langchain.com"><img src="https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white"/></a>
+  <a href="https://langfuse.com"><img src="https://img.shields.io/badge/Langfuse-4B5563?style=for-the-badge&logo=langfuse&logoColor=white"/></a>
   <a href="https://qdrant.tech"><img src="https://img.shields.io/badge/Qdrant-DC244C?style=for-the-badge&logo=qdrant&logoColor=white"/></a>
   <a href="https://streamlit.io"><img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white"/></a>
   <a href="https://pypi.org/project/gql/"><img src="https://img.shields.io/badge/gql-3A3A3A?style=for-the-badge&logo=graphql&logoColor=E10098"/></a>
@@ -24,6 +25,59 @@ Miruku — это AI-агент для поиска и рекомендации 
 - **Память диалога** — агент помнит контекст последних 6 рекомендаций в сессии
 - **Медиа-превью** — постер, ссылка на Shikimori и трейлер прямо в чате
 - **Стриминг ответов** — потоковый вывод токенов в Streamlit-интерфейсе
+
+## Диаграмма
+
+```mermaid
+flowchart TD
+    User(["Пользователь"])
+
+    subgraph Interfaces["Интерфейсы"]
+        Streamlit["Streamlit"]
+        Telegram["Telegram Bot"]
+    end
+
+    subgraph Agent["AgentSystem (LangChain)"]
+        Router["LangChain Agent\n(LLM)"]
+
+        subgraph Tools["Инструменты"]
+            T1["qdrant_search\nсемантический поиск"]
+            T2["sql_search\nSQL-агент"]
+            T3["shikimori_search\nонгоинги / анонсы"]
+            T4["shikimori_similar\nпохожие аниме"]
+            T5["web_search\nDuckDuckGo"]
+        end
+    end
+
+    subgraph Storage["Хранилища"]
+        Qdrant[("Qdrant\nвекторная БД")]
+        SQLite[("SQLite\nanime.db")]
+        Memory[("SQLite\nhistories.db")]
+    end
+
+    subgraph External["Внешние API"]
+        ShikimoriAPI["Shikimori API"]
+        DDG["DuckDuckGo"]
+        LLM["LLM\nvsellm"]
+        Langfuse["Langfuse\nтрейсинг"]
+    end
+
+    User --> Interfaces
+    Interfaces --> Router
+    Router --> Tools
+
+    T1 --> Qdrant
+    T1 --> LLM
+    T2 --> SQLite
+    T2 --> LLM
+    T3 --> ShikimoriAPI
+    T4 --> ShikimoriAPI
+    T5 --> DDG
+
+    Router --> LLM
+    Router --> Langfuse
+    Agent --> Memory
+```
 
 ## Инструменты агента
 
@@ -156,7 +210,7 @@ Qdrant будет доступен на `http://localhost:6333` (дашборд:
 4. Перенеси данные из локального Qdrant в облако:
 
 ```bash
-python migrate_qdrant.py
+python src/migrate_qdrant.py
 ```
 
 Если заданы оба варианта, `QDRANT_URL` имеет приоритет над `QDRANT_HOST/PORT`.

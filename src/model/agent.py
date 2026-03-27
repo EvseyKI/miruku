@@ -1,6 +1,8 @@
 import json
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langfuse import Langfuse
+from langfuse.langchain import CallbackHandler
 from qdrant_client import QdrantClient
 
 from model.prompt import PROMPT_ENTITY_MEMORY, SYSTEM_PROMPT
@@ -42,6 +44,8 @@ class AgentSystem:
         self._qdrant = qdrant_client
         self._collection = collection_name
         self._memory_llm = llm_fast
+        Langfuse()  # инициализация singleton, читает LANGFUSE_* из env
+        self._langfuse_handler = CallbackHandler()
 
     def _fetch_meta(self, anime_id: int) -> dict:
         points = self._qdrant.retrieve(
@@ -85,7 +89,7 @@ class AgentSystem:
 
         self._set_qdrant_history(history)
         full_content = ""
-        for chunk in self._agent.stream({"messages": messages}):
+        for chunk in self._agent.stream({"messages": messages}, config={"callbacks": [self._langfuse_handler]}):
             agent_chunk = chunk.get("model")
             if agent_chunk:
                 for msg in agent_chunk.get("messages", []):
@@ -127,7 +131,7 @@ class AgentSystem:
         messages.append({"role": "user", "content": query})
 
         self._set_qdrant_history(history)
-        result = self._agent.invoke({"messages": messages})
+        result = self._agent.invoke({"messages": messages}, config={"callbacks": [self._langfuse_handler]})
         content = result["messages"][-1].content
 
         if "---META---" in content:

@@ -1,7 +1,9 @@
+import base64
 import os
 import time
-from dotenv import load_dotenv
+
 import streamlit as st
+from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from qdrant_client import QdrantClient
 
@@ -10,6 +12,41 @@ from model.agent import AgentSystem
 load_dotenv()
 
 st.set_page_config(page_title="Miruku", layout="centered")
+
+with open(
+    os.path.join(os.path.dirname(__file__), "static/wallhaven-5gx7l3.png"), "rb"
+) as f:
+    bg_b64 = base64.b64encode(f.read()).decode()
+
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+                          url("data:image/png;base64,{bg_b64}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+    header[data-testid="stHeader"] {{
+        background: transparent;
+    }}
+    .stBottom, .stBottom > div, [data-testid="stBottomBlockContainer"] {{
+        background: transparent !important;
+    }}
+    .stApp, .stApp p, .stApp h1, .stApp h2, .stApp h3,
+    .stApp label, .stMarkdown, .stApp a, .stApp a:visited {{
+        color: white !important;
+    }}
+    [data-testid="stChatMessage"] {{
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px;
+    }}
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
 st.subheader("Miruku — поиск и рекомендации аниме тайтлов")
 
 
@@ -104,8 +141,10 @@ if query := st.chat_input("Опиши что хочешь посмотреть..
         if meta.get("trailer_url"):
             st.markdown(f"[🎬 Трейлер]({meta['trailer_url']})")
 
-    st.session_state.messages.append({
-        "role": "assistant",
-        "text": display_text,
-        **meta,
-    })
+    st.session_state.messages.append(
+        {
+            "role": "assistant",
+            "text": display_text,
+            **meta,
+        }
+    )
